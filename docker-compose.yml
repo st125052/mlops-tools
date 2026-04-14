@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
     environment:
       AWS_REGION: ${AWS_REGION:-}
-      AWS_SECRET_FIRECRAWL_API_KEY: ${AWS_SECRET_FIRECRAWL_API_KEY:-}
+      AWS_SECRET_FIRECRAWL: ${AWS_SECRET_FIRECRAWL:-}
     expose:
       - "8000"
 

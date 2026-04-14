@@ -14,7 +14,7 @@ def read_secret(secret_name, region):
 
 
 def get_firecrawl_api_key():
-    secret_name = os.getenv("AWS_SECRET_FIRECRAWL_API_KEY")
+    secret_name = os.getenv("AWS_SECRET_FIRECRAWL")
     if not secret_name:
         return ""
 
@@ -32,7 +32,7 @@ def get_firecrawl_api_key():
 async def firecrawl_extract(url):
     api_key = get_firecrawl_api_key()
     if not api_key:
-        raise RuntimeError("Firecrawl API key is not configured (AWS_SECRET_FIRECRAWL_API_KEY / Secrets Manager)")
+        raise RuntimeError("Firecrawl API key is not configured (AWS_SECRET_FIRECRAWL / Secrets Manager)")
 
     headers = {
         "Authorization": f"Bearer {api_key}",
