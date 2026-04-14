@@ -39,11 +39,11 @@ def main():
     missing = [
         name
         for name, value in [
-            ("AWS_SECRET_LITELLM", litellm_master_key),
-            ("AWS_SECRET_OPENAI", OPENAI_API_BASE),
-            ("AWS_SECRET_OPENAI", OPENAI_API_KEY),
-            ("AWS_SECRET_OPENAI", OPENAI_MODEL),
-            ("MCP_SERVER_URL", mcp_server_url),
+            (AWS_SECRET_LITELLM, litellm_master_key),
+            (AWS_SECRET_OPENAI, OPENAI_API_BASE),
+            (AWS_SECRET_OPENAI, OPENAI_API_KEY),
+            (AWS_SECRET_OPENAI, OPENAI_MODEL),
+            (MCP_SERVER_URL, mcp_server_url),
         ]
         if not value
     ]
