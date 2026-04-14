@@ -7,8 +7,6 @@ services:
     ports:
       - "80:8080"
     environment:
-      AWS_REGION: ${AWS_REGION:-}
-      AWS_SECRET_LITELLM: ${AWS_SECRET_LITELLM:-}
       DOCKER: "True"
       USER_AGENT: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
       WEBUI_NAME: "AIT AI"
