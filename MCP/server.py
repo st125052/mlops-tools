@@ -13,29 +13,24 @@ def read_secret(secret_name, region):
     return response["SecretString"]
 
 
-def get_firecrawl_api_key():
-    secret_name = os.getenv("AWS_SECRET_FIRECRAWL")
-    if not secret_name:
-        return ""
-
+def _load_firecrawl_credentials():
     region = os.environ["AWS_REGION"]
+    secret_name = os.environ["AWS_SECRET_FIRECRAWL"]
+    if not secret_name:
+        return "", ""
+
     raw = read_secret(secret_name, region)
-    try:
-        parsed = json.loads(raw)
-        if isinstance(parsed, dict):
-            return str(parsed.get("api_key", ""))
-    except json.JSONDecodeError:
-        pass
-    return raw
+    parsed = json.loads(raw)
+
+    return parsed.get("api_base", ""), parsed.get("api_key", "")
+
+
+FIRECRAWL_API_BASE, FIRECRAWL_API_KEY = _load_firecrawl_credentials()
 
 
 async def firecrawl_extract(url):
-    api_key = get_firecrawl_api_key()
-    if not api_key:
-        raise RuntimeError("Firecrawl API key is not configured (AWS_SECRET_FIRECRAWL / Secrets Manager)")
-
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "Authorization": f"Bearer {FIRECRAWL_API_KEY}",
         "Content-Type": "application/json",
     }
     payload = {
@@ -44,8 +39,8 @@ async def firecrawl_extract(url):
         "onlyMainContent": True,
     }
 
-    async with httpx.AsyncClient() as client:
-        response = await client.post("https://api.firecrawl.dev/v1/scrape", headers=headers, json=payload)
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.post(FIRECRAWL_API_BASE, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
 

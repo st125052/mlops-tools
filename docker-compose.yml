@@ -35,7 +35,7 @@ services:
     environment:
       AWS_REGION: ${AWS_REGION:-}
       AWS_SECRET_LITELLM: ${AWS_SECRET_LITELLM:-}
-      AWS_SECRET_OPENTYPHOON: ${AWS_SECRET_OPENTYPHOON:-}
+      AWS_SECRET_OPENAI: ${AWS_SECRET_OPENAI:-}
       MCP_SERVER_URL: "http://mcp:8000/mcp/"
     expose:
       - "4000"

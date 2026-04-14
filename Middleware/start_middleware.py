@@ -26,24 +26,19 @@ def secret_value(secret_name_env, json_key=None):
 
 
 def main():
-    AWS_SECRET_LITELLM = os.environ["AWS_SECRET_LITELLM"]
-    AWS_SECRET_OPENAI = os.environ["AWS_SECRET_OPENAI"]
     MCP_SERVER_URL = os.environ["MCP_SERVER_URL"]
 
-    litellm_master_key = secret_value(AWS_SECRET_LITELLM)
-    OPENAI_API_BASE = secret_value(AWS_SECRET_OPENAI, "api_base")
-    OPENAI_API_KEY = secret_value(AWS_SECRET_OPENAI, "api_key")
-    OPENAI_MODEL = secret_value(AWS_SECRET_OPENAI, "model")
-    mcp_server_url = MCP_SERVER_URL
+    LITELLM_MASTER_KEY = secret_value("AWS_SECRET_LITELLM")
+    OPENAI_API_BASE = secret_value("AWS_SECRET_OPENAI", "api_base")
+    OPENAI_API_KEY = secret_value("AWS_SECRET_OPENAI", "api_key")
+    OPENAI_MODEL = secret_value("AWS_SECRET_OPENAI", "model")
 
     missing = [
         name
         for name, value in [
-            (AWS_SECRET_LITELLM, litellm_master_key),
-            (AWS_SECRET_OPENAI, OPENAI_API_BASE),
-            (AWS_SECRET_OPENAI, OPENAI_API_KEY),
-            (AWS_SECRET_OPENAI, OPENAI_MODEL),
-            (MCP_SERVER_URL, mcp_server_url),
+            ("api_base", OPENAI_API_BASE),
+            ("api_key", OPENAI_API_KEY),
+            ("model", OPENAI_MODEL),
         ]
         if not value
     ]
@@ -52,11 +47,11 @@ def main():
 
     template = Path("/app/config.template.yaml").read_text()
     rendered = (
-        template.replace("{{LITELLM_MASTER_KEY}}", litellm_master_key)
+        template.replace("{{LITELLM_MASTER_KEY}}", LITELLM_MASTER_KEY)
         .replace("{{OPENAI_API_BASE}}", OPENAI_API_BASE)
         .replace("{{OPENAI_API_KEY}}", OPENAI_API_KEY)
         .replace("{{OPENAI_MODEL}}", OPENAI_MODEL)
-        .replace("{{MCP_SERVER_URL}}", mcp_server_url)
+        .replace("{{MCP_SERVER_URL}}", MCP_SERVER_URL)
     )
 
     config_path = Path("/app/config.yaml")
