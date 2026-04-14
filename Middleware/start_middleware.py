@@ -26,11 +26,15 @@ def secret_value(secret_name_env, json_key=None):
 
 
 def main():
-    litellm_master_key = secret_value("AWS_SECRET_LITELLM")
-    OPENAI_API_BASE = secret_value("AWS_SECRET_OPENAI", "api_base")
-    OPENAI_API_KEY = secret_value("AWS_SECRET_OPENAI", "api_key")
-    OPENAI_MODEL = secret_value("AWS_SECRET_OPENAI", "model")
-    mcp_server_url = os.environ["MCP_SERVER_URL"]
+    AWS_SECRET_LITELLM = os.environ["AWS_SECRET_LITELLM"]
+    AWS_SECRET_OPENAI = os.environ["AWS_SECRET_OPENAI"]
+    MCP_SERVER_URL = os.environ["MCP_SERVER_URL"]
+
+    litellm_master_key = secret_value(AWS_SECRET_LITELLM)
+    OPENAI_API_BASE = secret_value(AWS_SECRET_OPENAI, "api_base")
+    OPENAI_API_KEY = secret_value(AWS_SECRET_OPENAI, "api_key")
+    OPENAI_MODEL = secret_value(AWS_SECRET_OPENAI, "model")
+    mcp_server_url = MCP_SERVER_URL
 
     missing = [
         name
