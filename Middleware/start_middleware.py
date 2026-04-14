@@ -26,19 +26,19 @@ def secret_value(secret_name_env, json_key=None):
 
 
 def main():
-    litellm_master_key = secret_value("AWS_SECRET_LITELLM_MASTER_KEY")
-    OPENAI_API_BASE = secret_value("AWS_SECRET_OPENTYPHOON", "api_base")
-    OPENAI_API_KEY = secret_value("AWS_SECRET_OPENTYPHOON", "api_key")
-    OPENAI_MODEL = secret_value("AWS_SECRET_OPENTYPHOON", "model")
+    litellm_master_key = secret_value("AWS_SECRET_LITELLM")
+    OPENAI_API_BASE = secret_value("AWS_SECRET_OPENAI", "api_base")
+    OPENAI_API_KEY = secret_value("AWS_SECRET_OPENAI", "api_key")
+    OPENAI_MODEL = secret_value("AWS_SECRET_OPENAI", "model")
     mcp_server_url = os.environ["MCP_SERVER_URL"]
 
     missing = [
         name
         for name, value in [
-            ("AWS_SECRET_LITELLM_MASTER_KEY (secret value)", litellm_master_key),
-            ("AWS_SECRET_OPENTYPHOON api_base", OPENAI_API_BASE),
-            ("AWS_SECRET_OPENTYPHOON api_key", OPENAI_API_KEY),
-            ("AWS_SECRET_OPENTYPHOON model", OPENAI_MODEL),
+            ("AWS_SECRET_LITELLM", litellm_master_key),
+            ("AWS_SECRET_OPENAI", OPENAI_API_BASE),
+            ("AWS_SECRET_OPENAI", OPENAI_API_KEY),
+            ("AWS_SECRET_OPENAI", OPENAI_MODEL),
             ("MCP_SERVER_URL", mcp_server_url),
         ]
         if not value
