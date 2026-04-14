@@ -10,25 +10,21 @@ def read_secret(secret_name, region):
     return response["SecretString"]
 
 
-def secret_value(secret_name_env, json_key=None):
+def secret_value(secret_name_env, json_key):
     region = os.environ["AWS_REGION"]
     secret_name = os.environ[secret_name_env]
-    if not secret_name:
-        return ""
-
+    
     raw = read_secret(secret_name, region)
-    if json_key is None:
-        return raw
-
     parsed = json.loads(raw)
     value = parsed.get(json_key, "")
+    
     return value if isinstance(value, str) else str(value)
 
 
 def main():
     MCP_SERVER_URL = os.environ["MCP_SERVER_URL"]
 
-    LITELLM_MASTER_KEY = secret_value("AWS_SECRET_LITELLM")
+    LITELLM_MASTER_KEY = secret_value("AWS_SECRET_LITELLM", "api_key")
     OPENAI_API_BASE = secret_value("AWS_SECRET_OPENAI", "api_base")
     OPENAI_API_KEY = secret_value("AWS_SECRET_OPENAI", "api_key")
     OPENAI_MODEL = secret_value("AWS_SECRET_OPENAI", "model")
