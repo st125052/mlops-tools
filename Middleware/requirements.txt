@@ -1,0 +1,3 @@
+litellm[proxy]==1.83.0
+boto3==1.34.162
+pyyaml==6.0.2

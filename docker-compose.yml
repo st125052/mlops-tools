@@ -1,0 +1,58 @@
+services:
+  app:
+    build:
+      context: ./App
+    container_name: app
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      AWS_REGION: ${AWS_REGION:-}
+      AWS_SECRET_LITELLM_MASTER_KEY: ${AWS_SECRET_LITELLM_MASTER_KEY:-}
+      DOCKER: "True"
+      USER_AGENT: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      WEBUI_NAME: "AIT AI"
+      WEBUI_ADMIN_EMAIL: ${WEBUI_ADMIN_EMAIL:-}
+      WEBUI_ADMIN_PASSWORD: ${WEBUI_ADMIN_PASSWORD:-}
+      WEBUI_ADMIN_NAME: ${WEBUI_ADMIN_NAME:-}
+      ENABLE_OLLAMA_API: "False"
+      ENABLE_SIGNUP: "False"
+      ENABLE_PERSISTENT_CONFIG: "False"
+      ENABLE_DIRECT_CONNECTIONS: "True"
+      OPENAI_API_BASE_URL: "http://middleware:4000/v1"
+      USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "True"
+    volumes:
+      - open-webui-data:/app/backend/data
+    depends_on:
+      middleware:
+        condition: service_started
+
+  middleware:
+    build:
+      context: ./Middleware
+    container_name: middleware
+    restart: unless-stopped
+    environment:
+      AWS_REGION: ${AWS_REGION:-}
+      AWS_SECRET_LITELLM_MASTER_KEY: ${AWS_SECRET_LITELLM_MASTER_KEY:-}
+      AWS_SECRET_OPENTYPHOON: ${AWS_SECRET_OPENTYPHOON:-}
+      MCP_SERVER_URL: "http://mcp:8000/mcp/"
+    expose:
+      - "4000"
+    depends_on:
+      mcp:
+        condition: service_started
+
+  mcp:
+    build:
+      context: ./MCP
+    container_name: mcp
+    restart: unless-stopped
+    environment:
+      AWS_REGION: ${AWS_REGION:-}
+      AWS_SECRET_FIRECRAWL_API_KEY: ${AWS_SECRET_FIRECRAWL_API_KEY:-}
+    expose:
+      - "8000"
+
+volumes:
+  open-webui-data:
