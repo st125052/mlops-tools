@@ -8,6 +8,7 @@ model_list:
 litellm_settings:
   set_verbose: true
   drop_params: true
+  enable_mcp: true 
 
 general_settings:
   master_key: {{LITELLM_MASTER_KEY}}
