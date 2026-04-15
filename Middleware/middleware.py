@@ -23,7 +23,7 @@ def secret_value(secret_name_env, json_key):
 
 def main():
     MCP_SERVER_URL = os.environ["MCP_SERVER_URL"]
-
+    MCP_API_KEY = secret_value("AWS_SECRET_MCP", "api_key")
     LITELLM_MASTER_KEY = secret_value("AWS_SECRET_LITELLM", "api_key")
     OPENAI_API_BASE = secret_value("AWS_SECRET_OPENAI", "api_base")
     OPENAI_API_KEY = secret_value("AWS_SECRET_OPENAI", "api_key")
@@ -48,6 +48,7 @@ def main():
         .replace("{{OPENAI_API_KEY}}", OPENAI_API_KEY)
         .replace("{{OPENAI_MODEL}}", OPENAI_MODEL)
         .replace("{{MCP_SERVER_URL}}", MCP_SERVER_URL)
+        .replace("{{MCP_API_KEY}}", MCP_API_KEY)
     )
 
     config_path = Path("/app/config.yaml")

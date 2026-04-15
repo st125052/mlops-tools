@@ -1,5 +1,5 @@
 model_list:
-  - model_name: openai-main
+  - model_name: openai
     litellm_params:
       model: openai/{{OPENAI_MODEL}}
       api_base: {{OPENAI_API_BASE}}
@@ -8,7 +8,7 @@ model_list:
 litellm_settings:
   set_verbose: true
   drop_params: true
-  enable_mcp: true 
+  enable_mcp: true
 
 general_settings:
   master_key: {{LITELLM_MASTER_KEY}}
@@ -16,5 +16,7 @@ general_settings:
 mcp_servers:
   mcp_tools:
     url: {{MCP_SERVER_URL}}
-    transport: "http"
+    transport: "streamable-http"
     description: "Internal MCP tools"
+    headers:
+      Authorization: "Bearer {{MCP_API_KEY}}"

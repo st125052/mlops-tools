@@ -1,4 +1,29 @@
 services:
+  db:
+    build:
+      context: ./Database
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openwebui
+      POSTGRES_PASSWORD: openwebui
+      POSTGRES_DB: openwebui
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openwebui"]
+      interval: 5s
+      retries: 5
+      
+  cache:
+    build:
+      context: ./Cache
+    container_name: cache
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+  
   app:
     build:
       context: ./App
@@ -13,16 +38,23 @@ services:
       WEBUI_ADMIN_EMAIL: ${WEBUI_ADMIN_EMAIL:-}
       WEBUI_ADMIN_PASSWORD: ${WEBUI_ADMIN_PASSWORD:-}
       WEBUI_ADMIN_NAME: ${WEBUI_ADMIN_NAME:-}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
       ENABLE_OLLAMA_API: "False"
       ENABLE_SIGNUP: "False"
       ENABLE_PERSISTENT_CONFIG: "False"
-      ENABLE_DIRECT_CONNECTIONS: "True"
+      ENABLE_DIRECT_CONNECTIONS: "False"
       OPENAI_API_BASE_URL: "http://middleware:4000/v1"
-      USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "True"
+      USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "False"
+      DATABASE_URL: "postgresql://openwebui:openwebui@postgres:5432/openwebui"
+      REDIS_URL: "redis://redis:6379"
     volumes:
       - open-webui-data:/app/backend/data
     depends_on:
       middleware:
+        condition: service_started
+      db:
+        condition: service_healthy
+      cache:
         condition: service_started
 
   middleware:
@@ -32,6 +64,7 @@ services:
     restart: unless-stopped
     environment:
       AWS_REGION: ${AWS_REGION:-}
+      AWS_SECRET_MCP: ${AWS_SECRET_MCP:-}
       AWS_SECRET_LITELLM: ${AWS_SECRET_LITELLM:-}
       AWS_SECRET_OPENAI: ${AWS_SECRET_OPENAI:-}
       MCP_SERVER_URL: "http://mcp:8000/mcp/"
@@ -48,6 +81,7 @@ services:
     restart: unless-stopped
     environment:
       AWS_REGION: ${AWS_REGION:-}
+      AWS_SECRET_MCP: ${AWS_SECRET_MCP:-} 
       AWS_SECRET_FIRECRAWL: ${AWS_SECRET_FIRECRAWL:-}
     expose:
       - "8000"

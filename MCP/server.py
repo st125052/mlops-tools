@@ -27,6 +27,14 @@ def _load_firecrawl_credentials():
 
 FIRECRAWL_API_BASE, FIRECRAWL_API_KEY = _load_firecrawl_credentials()
 
+def _load_mcp_credentials():
+    region = os.environ["AWS_REGION"]
+    secret_name = os.environ["AWS_SECRET_MCP"]
+    raw = read_secret(secret_name, region)
+    parsed = json.loads(raw)
+    return parsed.get("api_key", "")
+
+MCP_API_KEY = _load_mcp_credentials()
 
 async def firecrawl_extract(url):
     headers = {
@@ -68,4 +76,4 @@ async def fetch_official_page(url):
     return await firecrawl_extract(url)
 
 if __name__ == "__main__":
-    mcp.run(transport="http", host="0.0.0.0", port=8000, path="/mcp/")
+    mcp.run(transport="http", host="0.0.0.0", port=8000, path="/mcp/", api_key=MCP_API_KEY)
