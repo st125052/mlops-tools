@@ -65,6 +65,7 @@ services:
     container_name: middleware
     restart: unless-stopped
     environment:
+      LITELLM_LOG: "DEBUG"
       AWS_REGION: ${AWS_REGION:-}
       AWS_SECRET_MCP: ${AWS_SECRET_MCP:-}
       AWS_SECRET_LITELLM: ${AWS_SECRET_LITELLM:-}
