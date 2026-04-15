@@ -63,7 +63,7 @@ async def firecrawl_extract(url):
         "source": "firecrawl",
         "url": url,
         "title": result.get("metadata", {}).get("title", ""),
-        "markdown": result.get("markdown", ""),
+        "markdown": result.get("markdown", "")[:6000],
         "metadata": result.get("metadata", {}),
     }
 
