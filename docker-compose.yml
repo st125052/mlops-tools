@@ -14,7 +14,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U openwebui"]
       interval: 5s
       retries: 5
-      
+
   cache:
     build:
       context: ./Cache
@@ -45,8 +45,8 @@ services:
       ENABLE_DIRECT_CONNECTIONS: "False"
       OPENAI_API_BASE_URL: "http://middleware:4000/v1"
       USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "False"
-      DATABASE_URL: "postgresql://openwebui:openwebui@postgres:5432/openwebui"
-      REDIS_URL: "redis://redis:6379"
+      DATABASE_URL: "postgresql://openwebui:openwebui@db:5432/openwebui"
+      REDIS_URL: "redis://cache:6379"
     volumes:
       - open-webui-data:/app/backend/data
     depends_on:
