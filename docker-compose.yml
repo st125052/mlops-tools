@@ -88,3 +88,5 @@ services:
 
 volumes:
   open-webui-data:
+  postgres-data:
+  redis-data:
