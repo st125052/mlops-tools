@@ -18,5 +18,5 @@ mcp_servers:
     url: {{MCP_SERVER_URL}}
     transport: "http"
     description: "Internal MCP tools"
-    auth_type: "bearer"
+    auth_type: "bearer_token"
     authentication_token: {{MCP_API_KEY}}
