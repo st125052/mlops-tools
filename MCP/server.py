@@ -3,8 +3,7 @@ import os
 import boto3
 import httpx
 from fastmcp import FastMCP
-
-mcp = FastMCP("AIT")
+from fastmcp.server.auth.providers.jwt import StaticTokenVerifier
 
 
 def read_secret(secret_name, region):
@@ -25,8 +24,6 @@ def _load_firecrawl_credentials():
     return parsed.get("api_base", ""), parsed.get("api_key", "")
 
 
-FIRECRAWL_API_BASE, FIRECRAWL_API_KEY = _load_firecrawl_credentials()
-
 def _load_mcp_credentials():
     region = os.environ["AWS_REGION"]
     secret_name = os.environ["AWS_SECRET_MCP"]
@@ -34,7 +31,13 @@ def _load_mcp_credentials():
     parsed = json.loads(raw)
     return parsed.get("api_key", "")
 
+
+FIRECRAWL_API_BASE, FIRECRAWL_API_KEY = _load_firecrawl_credentials()
 MCP_API_KEY = _load_mcp_credentials()
+
+verifier = StaticTokenVerifier(tokens={MCP_API_KEY: {"client_id": "litellm"}})
+mcp = FastMCP("AIT", auth=verifier)
+
 
 async def firecrawl_extract(url):
     headers = {
@@ -75,5 +78,6 @@ def healthcheck():
 async def fetch_official_page(url):
     return await firecrawl_extract(url)
 
+
 if __name__ == "__main__":
-    mcp.run(transport="http", host="0.0.0.0", port=8000, path="/mcp/", api_key=MCP_API_KEY)
+    mcp.run(transport="http", host="0.0.0.0", port=8000, path="/mcp/")
