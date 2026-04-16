@@ -49,6 +49,11 @@ services:
       REDIS_URL: "redis://cache:6379"
       AWS_REGION: ${AWS_REGION:-}
       AWS_SECRET_LITELLM: ${AWS_SECRET_LITELLM:-}
+      ENABLE_IMAGE_GENERATION: "False"
+      ENABLE_WEB_SEARCH: "False"
+      ENABLE_CODE_EXECUTION: "False"
+      ENABLE_RAG_WEB_SEARCH: "False"
+      ENABLE_SEARCH_QUERY_GENERATION: "False"
     volumes:
       - open-webui-data:/app/backend/data
     depends_on:
